@@ -1,0 +1,575 @@
+<title>Self Connection</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: playful concept brief — colourful hero with fanned cards, journey map, live phone prototype, storyboard, open questions */
+:root{
+  --bg:#F2F6F2; --surface:#FFFFFF; --ink:#14201C; --muted:#55625D; --line:#DCE4DF; --soft:#E6EEE9;
+  --accent:#3348E0; --coral:#E9476F; --tang:#F2692A; --lemon:#E2F25A;
+  /* in-app palette (fixed in both themes; placeholder sampai aset Manifestalk diterima) */
+  --a-bg:#EEF6F0; --a-ink:#14201C; --a-dim:#5B6964; --a-card:#FFFFFF; --a-line:rgba(20,32,28,.10);
+  --mind:#3E5BF2; --body:#FF7A3D; --feel:#F0567E; --a-lemon:#E4F25E; --cobalt:#2C3FE0; --lilac:#B9A8FF; --mint:#7FE0B4; --peach:#FFB48A;
+  --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-serif:"Instrument Serif", Georgia, "Times New Roman", serif;
+  --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1513; --surface:#17201D; --ink:#EAF0EC; --muted:#9DAAA5; --line:#2A3531; --soft:#1C2623;
+  --accent:#93A1FF; --coral:#FF89A5; --tang:#FF9E6B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1513; --surface:#17201D; --ink:#EAF0EC; --muted:#9DAAA5; --line:#2A3531; --soft:#1C2623;
+  --accent:#93A1FF; --coral:#FF89A5; --tang:#FF9E6B; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 64px;overflow-x:hidden}
+.wrap{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;text-wrap:balance;margin:0;line-height:1.05;letter-spacing:-.02em}
+h2{font-size:clamp(28px,3.6vw,40px)}
+h2 em,h1 em{font-family:var(--f-serif);font-weight:400;font-style:italic;letter-spacing:0}
+h3{font-size:19px;letter-spacing:-.01em}
+p{margin:0}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.lead{color:var(--muted);max-width:64ch}
+section{padding-block:64px 8px;display:grid;gap:24px}
+.sec-head{display:grid;gap:10px}
+
+/* hero */
+.hero{padding-block:56px 8px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:center}
+.hero h1{font-size:clamp(52px,8.5vw,104px);font-weight:800;letter-spacing:-.045em;line-height:.92}
+.hero h1 em{display:block;font-size:.92em;color:var(--accent)}
+.hero .lead{font-size:17px;margin-top:18px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.pills span{font-size:13px;font-weight:600;padding:6px 14px;border-radius:99px;background:var(--surface);border:1px solid var(--line)}
+.pills span b{color:var(--accent)}
+.fan{position:relative;height:340px;max-width:420px;width:100%;justify-self:center}
+.fan .fc{position:absolute;width:190px;height:260px;border-radius:22px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;box-shadow:0 24px 40px -24px rgba(20,32,28,.55);transition:transform .4s cubic-bezier(.3,.8,.3,1)}
+.fan .fc b{font-family:var(--f-display);font-size:26px;letter-spacing:-.02em;line-height:1}
+.fan .fc small{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;opacity:.85}
+.fan .fc p{font-family:var(--f-serif);font-style:italic;font-size:17px;line-height:1.2}
+.fan .fc svg{width:56px;height:56px}
+.fc.m{left:4%;top:40px;background:var(--mind);transform:rotate(-12deg)}
+.fc.b{left:30%;top:10px;background:var(--body);transform:rotate(-1deg);z-index:2}
+.fc.f{left:55%;top:50px;background:var(--feel);transform:rotate(11deg)}
+.fan:hover .fc.m{transform:rotate(-16deg) translate(-10px,-6px)}
+.fan:hover .fc.f{transform:rotate(15deg) translate(10px,-6px)}
+.spark{position:absolute;width:74px;height:74px;right:2%;top:0;z-index:3;color:var(--ink)}
+.spark svg{width:100%;height:100%;animation:spin 18s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.mech{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding:0;margin:0}
+.mech li{list-style:none;padding:22px;border-radius:20px;display:grid;gap:8px;align-content:start;background:var(--surface);border:1px solid var(--line)}
+.mech .num{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;color:#fff}
+.mech li:nth-child(1) .num{background:var(--mind)}
+.mech li:nth-child(2) .num{background:var(--body)}
+.mech li:nth-child(3) .num{background:var(--feel)}
+.mech p{color:var(--muted);font-size:14px}
+
+/* journey */
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:20px;background:var(--surface)}
+.journey{border-collapse:collapse;min-width:1060px;width:100%;font-size:13.5px}
+.journey th,.journey td{padding:12px 14px;vertical-align:top;border-bottom:1px solid var(--line);text-align:left}
+.journey thead th{font-family:var(--f-display);font-weight:700;font-size:16px;letter-spacing:-.01em;line-height:1.2}
+.journey thead th small{display:inline-block;font-family:var(--f-body);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:1px 8px;border-radius:99px;margin-bottom:6px;background:var(--soft);color:var(--muted)}
+.journey thead th small.new{background:var(--coral);color:#fff}
+.journey tbody th{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;width:120px;position:sticky;left:0;background:var(--surface)}
+.journey tr:last-child td,.journey tr:last-child th{border-bottom:0}
+.journey td.curve{padding:6px 0 0}
+.feel{font-weight:600}
+.curve svg{display:block;width:100%;height:120px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+/* prototype */
+.proto{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:32px;align-items:start}
+.steps{display:grid;gap:4px;padding:0;margin:0}
+.steps li{list-style:none}
+.steps button{all:unset;cursor:pointer;display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;padding:10px 12px;border-radius:14px;width:100%;box-sizing:border-box}
+.steps button:hover{background:var(--soft)}
+.steps button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.steps button[aria-current="step"]{background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+.steps .n{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted)}
+.steps button[aria-current="step"] .n{background:var(--accent);color:#fff;border-color:var(--accent)}
+.steps b{font-weight:700;font-size:14px;display:block}
+.steps span{font-size:12.5px;color:var(--muted)}
+.notes{display:grid;gap:12px;align-content:start}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;gap:8px}
+.note h4{margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.note ul{margin:0;padding-left:18px;font-size:14px;color:var(--muted);display:grid;gap:4px}
+.note p{font-size:14px;color:var(--muted)}
+.hint{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
+
+/* ===== phone ===== */
+.phone{width:22em;height:46em;border-radius:2.8em;padding:.55em;background:#121816;box-shadow:0 34px 60px -30px rgba(20,32,28,.55),0 0 0 1px rgba(0,0,0,.2);font-size:14px;flex:none;max-width:100%}
+.screen{--cat:var(--mind);position:relative;height:100%;border-radius:2.3em;overflow:hidden;background:var(--a-bg);color:var(--a-ink);font-family:var(--f-body)}
+.blob{position:absolute;border-radius:50%;filter:blur(30px);opacity:.55;pointer-events:none}
+.blob.b1{width:14em;height:14em;background:var(--cat);top:-5em;right:-6em;opacity:.35;transition:background .5s}
+.blob.b2{width:12em;height:12em;background:var(--a-lemon);bottom:-4em;left:-5em}
+.blob.b3{width:8em;height:8em;background:var(--lilac);top:45%;right:-4em;opacity:.35}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:.95em 1.5em .2em;font-size:.72em;font-weight:600;position:relative;z-index:2}
+.body{position:absolute;inset:2.2em 0 0;overflow-y:auto;padding:.8em 1.3em 1.4em;display:flex;flex-direction:column;gap:.85em;z-index:1}
+.fade{animation:fade .45s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.brand{font-family:var(--f-display);font-weight:800;letter-spacing:-.02em;font-size:.95em}
+.top{display:flex;justify-content:space-between;align-items:center}
+.prog{display:flex;gap:.3em;flex:1;margin-left:1em}
+.prog i{flex:1;height:.28em;border-radius:1em;background:var(--a-line)}
+.prog i.on{background:var(--a-ink)}
+.ttl{font-family:var(--f-display);font-weight:800;font-size:1.75em;line-height:1;letter-spacing:-.035em}
+.ttl em{font-family:var(--f-serif);font-weight:400;letter-spacing:0}
+.sub{font-size:.86em;color:var(--a-dim);line-height:1.5}
+.c{text-align:center}
+.btn{all:unset;box-sizing:border-box;display:flex;justify-content:center;align-items:center;gap:.5em;text-align:center;cursor:pointer;padding:.95em 1.2em;border-radius:99px;background:var(--a-ink);color:#fff;font-weight:700;font-size:.92em;transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.btn .ar{display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;background:var(--a-lemon);color:var(--a-ink);font-size:.9em}
+.btn.ghost{background:var(--a-card);color:var(--a-ink);box-shadow:inset 0 0 0 1px var(--a-line)}
+.btn.cat{background:var(--cat)}
+.btn[disabled]{opacity:.3;cursor:not-allowed}
+.btn:focus-visible,.qopt:focus-visible,.mcard:focus-visible,.link:focus-visible,.starter:focus-visible{outline:2px solid var(--cobalt);outline-offset:3px}
+.link{all:unset;cursor:pointer;font-size:.78em;font-weight:600;color:var(--cobalt);text-decoration:underline;text-underline-offset:3px;align-self:center}
+.spacer{flex:1}
+.tags{display:flex;gap:.4em;flex-wrap:wrap;justify-content:center}
+.tags span{font-size:.7em;font-weight:700;padding:.35em .8em;border-radius:99px;background:var(--a-card);box-shadow:inset 0 0 0 1px var(--a-line)}
+.tags span:nth-child(2){background:var(--a-lemon);box-shadow:none}
+
+/* welcome orb */
+.orb{width:12em;height:12em;margin:.6em auto 0;position:relative;display:grid;place-items:center}
+.orb .g{position:absolute;inset:0;background:conic-gradient(from 30deg,var(--mind),var(--feel),var(--body),var(--a-lemon),var(--mint),var(--mind));border-radius:42% 58% 63% 37% / 45% 40% 60% 55%;filter:saturate(1.05)}
+.live .orb .g{animation:morph 8s ease-in-out infinite}
+@keyframes morph{0%,100%{border-radius:42% 58% 63% 37% / 45% 40% 60% 55%;transform:scale(.82) rotate(0)}50%{border-radius:58% 42% 40% 60% / 55% 60% 40% 45%;transform:scale(1.02) rotate(40deg)}}
+.orb span{position:relative;z-index:1;background:var(--a-card);border-radius:99px;padding:.45em 1em;font-size:.72em;font-weight:700;letter-spacing:.04em;box-shadow:0 6px 16px -8px rgba(0,0,0,.3)}
+
+/* questions */
+.qhead{font-family:var(--f-display);font-weight:700;font-size:1.25em;line-height:1.12;letter-spacing:-.025em}
+.qopt{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:grid;grid-template-columns:2.8em 1fr;gap:.75em;align-items:start;padding:.9em;border-radius:1.2em;background:var(--a-card);box-shadow:inset 0 0 0 1px var(--a-line);transition:transform .2s,box-shadow .2s}
+.live .qopt:hover{transform:translateY(-2px)}
+.qopt.sel{box-shadow:inset 0 0 0 2px var(--qc),0 10px 22px -14px var(--qc)}
+.qicon{width:2.8em;height:2.8em;border-radius:.9em;display:grid;place-items:center;background:var(--qc);color:#fff;transform:rotate(-6deg)}
+.qicon svg{width:1.6em;height:1.6em}
+.qopt b{display:block;font-family:var(--f-display);font-weight:800;font-size:1em;letter-spacing:-.02em;color:var(--qc)}
+.qopt b small{font-family:var(--f-body);font-weight:600;font-size:.72em;color:var(--a-dim);letter-spacing:0;margin-left:.35em}
+.qopt em{display:block;font-family:var(--f-serif);font-size:1.02em;line-height:1.25;margin-top:.2em}
+.qopt .tick{position:absolute;top:.7em;right:.7em;width:1.5em;height:1.5em;border-radius:50%;background:var(--qc);color:#fff;display:none;place-items:center}
+.qopt .tick svg{width:1em;height:1em}
+.qopt.sel .tick{display:grid}
+
+/* manifestation cards */
+.chip{align-self:flex-start;font-size:.7em;font-weight:700;letter-spacing:.04em;padding:.35em .85em;border-radius:99px;background:var(--cat);color:#fff}
+.qline{font-family:var(--f-serif);font-size:1.08em;line-height:1.25}
+.deck{display:flex;flex-direction:column;gap:.55em;align-items:center;padding-top:.2em}
+.mcard{all:unset;cursor:pointer;width:13em;height:7.2em;perspective:900px;display:block}
+.mcard:nth-child(1){transform:rotate(-3deg)}
+.mcard:nth-child(2){transform:rotate(2.5deg) translateX(.6em)}
+.mcard:nth-child(3){transform:rotate(-1.5deg) translateX(-.4em)}
+.mcard .in{display:block;position:relative;width:100%;height:100%;transition:transform .8s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.mcard.flip .in{transform:rotateY(180deg) scale(1.04)}
+.face{position:absolute;inset:0;border-radius:1em;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.back{background:var(--cobalt);color:var(--a-lemon);box-shadow:0 12px 20px -12px rgba(44,63,224,.8);display:grid;place-items:center}
+.back svg{position:absolute;inset:0;width:100%;height:100%}
+.back small{position:relative;font-family:var(--f-display);font-weight:800;font-size:.8em;letter-spacing:-.01em;background:var(--a-lemon);color:var(--a-ink);padding:.3em .8em;border-radius:99px;transform:rotate(-4deg)}
+.front{transform:rotateY(180deg);background:var(--a-card);display:grid;grid-template-columns:5.6em 1fr;box-shadow:0 12px 24px -14px rgba(0,0,0,.45)}
+.art{background:radial-gradient(circle at 30% 25%,var(--c1),transparent 70%),radial-gradient(circle at 75% 80%,var(--c2),transparent 70%),var(--c2);display:grid;place-items:center;color:#fff}
+.art svg{width:56%;height:56%}
+.front div:last-child{padding:.75em .8em;display:flex;flex-direction:column;justify-content:center;gap:.2em}
+.front b{font-family:var(--f-display);font-weight:800;font-size:1.05em;letter-spacing:-.02em;display:block}
+.front p{font-family:var(--f-serif);font-size:.82em;line-height:1.2}
+.mcard.dim{opacity:.2;pointer-events:none;transition:opacity .5s}
+.live .mcard:not(.flip):not(.dim):hover .in{transform:translateY(-4px) scale(1.02)}
+
+/* insight */
+.reveal{background:var(--a-card);border-radius:1.2em;display:grid;grid-template-columns:5.4em 1fr;overflow:hidden;box-shadow:0 12px 24px -16px rgba(0,0,0,.4)}
+.reveal .art{min-height:6.4em}
+.reveal div:last-child{padding:.8em .9em;display:grid;gap:.15em;align-content:center}
+.reveal small{font-size:.62em;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--a-dim)}
+.reveal b{font-family:var(--f-display);font-weight:800;font-size:1.15em;letter-spacing:-.02em}
+.reveal p{font-family:var(--f-serif);font-size:.92em;line-height:1.2}
+.field{display:grid;gap:.35em}
+.field label{font-size:.74em;font-weight:700;color:var(--a-dim)}
+.field input,.field textarea{font:inherit;font-size:.92em;color:var(--a-ink);background:var(--a-card);border:1.5px solid transparent;box-shadow:inset 0 0 0 1px var(--a-line);border-radius:1em;padding:.8em .95em;width:100%;outline:none}
+.field textarea{min-height:7em;resize:none;line-height:1.5}
+.field input:focus,.field textarea:focus{border-color:var(--cat)}
+.field input::placeholder,.field textarea::placeholder{color:#97A39F}
+.count{font-size:.68em;color:var(--a-dim);text-align:right;font-variant-numeric:tabular-nums}
+.starters{display:flex;gap:.4em;flex-wrap:wrap}
+.starter{all:unset;cursor:pointer;font-size:.72em;font-weight:600;padding:.4em .8em;border-radius:99px;background:var(--a-lemon)}
+.check{display:grid;grid-template-columns:1.2em 1fr;gap:.6em;font-size:.74em;color:var(--a-dim);line-height:1.45;align-items:start}
+.check input{accent-color:#14201C;margin:.15em 0 0;width:1.1em;height:1.1em}
+.preview{position:relative;border-radius:1.2em;overflow:hidden;height:9.5em}
+.preview .mini{filter:blur(3px);font-size:.62em;pointer-events:none;transform:rotate(-3deg) translateY(-1em)}
+.preview .lock{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-3deg);background:var(--a-ink);color:#fff;font-size:.75em;font-weight:700;padding:.5em 1em;border-radius:99px;white-space:nowrap}
+
+/* result poster */
+.sc{--cat:var(--feel);background:var(--a-card);border-radius:1.4em;overflow:hidden;position:relative;box-shadow:0 22px 40px -24px rgba(0,0,0,.6)}
+.sc .hd{background:var(--cat);color:#fff;padding:1em 1.1em 1.6em;position:relative;overflow:hidden}
+.sc .hd::after{content:"";position:absolute;width:9em;height:9em;border-radius:50%;background:var(--a-lemon);right:-3.5em;top:-3.5em;opacity:.9}
+.sc .meta{display:flex;justify-content:space-between;font-size:.62em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;position:relative;z-index:1;opacity:.92}
+.sc h5{margin:.5em 0 0;font-family:var(--f-display);font-weight:800;font-size:2em;line-height:.88;letter-spacing:-.045em;position:relative;z-index:1}
+.sc h5 em{font-family:var(--f-serif);font-weight:400;letter-spacing:0;display:block}
+.sc .bd{padding:0 1.1em 1em;display:grid;gap:.7em;margin-top:-1em;position:relative}
+.sc .q{font-family:var(--f-serif);font-size:.92em;line-height:1.2;background:var(--a-card);border-radius:.9em;padding:.7em .8em;box-shadow:0 8px 18px -12px rgba(0,0,0,.35)}
+.sc .crd{display:grid;grid-template-columns:3.6em 1fr;gap:.7em;align-items:center}
+.sc .crd .art{width:3.6em;height:3.6em;border-radius:.9em}
+.sc .crd b{font-family:var(--f-display);font-weight:800;font-size:.95em;display:block;letter-spacing:-.02em}
+.sc .crd p{font-family:var(--f-serif);font-size:.82em;line-height:1.2}
+.sc .ins{font-family:var(--f-serif);font-style:italic;font-size:1.18em;line-height:1.2;background:var(--a-lemon);border-radius:.9em;padding:.7em .85em;word-break:break-word;position:relative}
+.sc .ins::before{content:"\201C";font-family:var(--f-display);font-weight:800;font-style:normal;font-size:2.2em;line-height:0;position:absolute;left:.15em;top:.45em;color:rgba(20,32,28,.22)}
+.sc .ins span{position:relative}
+.sc .ft{display:flex;justify-content:space-between;align-items:center;font-size:.66em;color:var(--a-dim)}
+.sc .ft b{color:var(--a-ink);font-family:var(--f-display);font-size:1.25em;letter-spacing:-.02em}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:.5em}
+
+/* done */
+.burst{position:relative;width:8em;height:8em;margin:1.4em auto .2em}
+.burst svg{width:100%;height:100%}
+.live .burst svg{animation:pop .7s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes pop{from{transform:scale(.3) rotate(-40deg);opacity:0}to{transform:none;opacity:1}}
+.dots i{position:absolute;width:.6em;height:.6em;border-radius:50%}
+.sent{font-size:.82em;background:var(--a-card);border-radius:1em;padding:.85em 1em;box-shadow:inset 0 0 0 1px var(--a-line);display:grid;gap:.4em}
+.sent div{display:flex;justify-content:space-between;gap:.6em}
+.sent span{color:var(--a-dim)}
+
+/* storyboard */
+.board{overflow-x:auto;padding:4px 2px 18px;display:flex;gap:28px;scroll-snap-type:x mandatory}
+.frame{flex:none;display:grid;gap:12px;scroll-snap-align:start;margin:0}
+.frame .phone{font-size:11.5px;pointer-events:none}
+.frame figcaption{font-size:13.5px;display:grid;gap:4px;width:22em;max-width:100%}
+.frame figcaption b{font-size:15px;font-family:var(--f-display);letter-spacing:-.01em}
+.frame figcaption span{color:var(--muted)}
+.src{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.src.new{color:var(--coral)}
+
+.qs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.qs .note b{font-size:16px;color:var(--ink);font-family:var(--f-display);letter-spacing:-.01em}
+
+@media (max-width:980px){
+  .proto{grid-template-columns:1fr;justify-items:center}
+  .proto>*{width:100%;max-width:520px}
+  .phone-wrap{display:flex;flex-direction:column;align-items:center}
+  .hero{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .mech,.qs{grid-template-columns:1fr}
+  .phone{font-size:12.5px}
+  .fan{height:280px;transform:scale(.82);transform-origin:top center;margin-bottom:-40px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Konsep UX &amp; UI · Dummy untuk pitching</p>
+      <h1>Self <em>Connection</em></h1>
+      <p class="lead">Aktivitas mindfulness berbasis web untuk event. Peserta memilih satu pertanyaan refleksi, membuka satu Mindful Manifestation Card dengan intuisi, menulis insight-nya, lalu pulang membawa kartu Self Connection yang personal.</p>
+      <div class="pills"><span><b>±3–5 menit</b> per peserta</span><span><b>7 layar</b>, 5 dari brief</span><span><b>Mobile web</b> via QR</span><span>Untuk <b>dewasa</b>, middle-up</span></div>
+    </div>
+    <div class="fan" aria-hidden="true">
+      <div class="fc m"><small>Mind</small><div id="h-mind"></div><div><b>Pikiran</b><p>Pola pikir apa yang perlu saya ubah?</p></div></div>
+      <div class="fc b"><small>Body</small><div id="h-body"></div><div><b>Tubuh</b><p>Bagaimana saya menghargai tubuh saya?</p></div></div>
+      <div class="fc f"><small>Feeling</small><div id="h-feel"></div><div><b>Perasaan</b><p>Apa yang perlu saya lepaskan?</p></div></div>
+      <div class="spark"><svg viewBox="0 0 100 100"><path id="cp" d="M50 50m-36 0a36 36 0 1 1 72 0a36 36 0 1 1-72 0" fill="none"/><circle cx="50" cy="50" r="48" fill="#E4F25E"/><text font-size="11.5" font-weight="700" font-family="Figtree, sans-serif" fill="#14201C" letter-spacing="2"><textPath href="#cp">· NO RIGHT · NO WRONG · JUST YOU </textPath></text><path d="M50 38l3.5 8.5L62 50l-8.5 3.5L50 62l-3.5-8.5L38 50l8.5-3.5z" fill="#14201C"/></svg></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Mekanisme dari brief</p>
+      <h2>Tiga langkah, satu <em>momen</em> untuk diri sendiri</h2>
+    </div>
+    <ol class="mech">
+      <li><span class="num">1</span><h3>Pilih pertanyaan</h3><p>Peserta memilih satu dari tiga pertanyaan connection: Mind, Body, atau Feeling, sesuai yang paling dibutuhkan saat ini.</p></li>
+      <li><span class="num">2</span><h3>Buka kartu &amp; tulis insight</h3><p>Dari tiga kartu tertutup, peserta memilih satu secara intuitif. Kartu yang terbuka menjadi panduan, lalu peserta mengetik insight dan klik Submit.</p></li>
+      <li><span class="num">3</span><h3>Isi data, terima kartu</h3><p>Peserta mengisi nama, HP, dan email untuk mendapatkan kartu Self Connection berisi pertanyaan, kartu, dan insight-nya.</p></li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">1 · UX journey</p>
+      <h2>Dari booth sampai <em>inbox</em></h2>
+      <p class="lead">Setiap tahap memetakan apa yang dilakukan peserta, titik sentuhnya, apa yang dirasakan, dan apa yang perlu dijaga desainnya. Tahap berlabel "usulan" adalah tambahan di luar brief.</p>
+    </div>
+    <div class="scroll"><table class="journey" id="journey"></table></div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Tingkat keterlibatan emosi peserta</span><span><i style="background:var(--coral)"></i>Titik rawan (friction) yang perlu dijaga</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">2 · UI prototype</p>
+      <h2>Coba alurnya <em>langsung</em></h2>
+      <p class="lead">Prototype dummy yang bisa diklik. Tidak ada data yang dikirim atau disimpan. Pakai daftar langkah untuk lompat ke layar tertentu saat presentasi.</p>
+    </div>
+    <div class="proto">
+      <ol class="steps" id="steps"></ol>
+      <div class="phone-wrap">
+        <div class="phone live"><div class="screen" id="live"></div></div>
+        <p class="hint">Tip pitching: link "Pakai contoh" mengisi form otomatis.</p>
+      </div>
+      <div class="notes" id="notes"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">3 · Semua layar</p>
+      <h2>Storyboard <em>lengkap</em></h2>
+      <p class="lead">Seluruh layar dalam satu baris, diisi contoh peserta "Rina" yang memilih pertanyaan Feeling. Geser ke samping untuk melihat semuanya.</p>
+    </div>
+    <div class="board" id="board"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">4 · Sebelum masuk development</p>
+      <h2>Hal yang perlu <em>dikonfirmasi</em></h2>
+    </div>
+    <div class="qs">
+      <div class="note"><b>Aset brand Manifestalk</b><p>Arah visual di sini segar dan playful untuk audiens dewasa middle-up. Warna, font, dan ilustrasi kartu masih placeholder dan akan disesuaikan begitu logo, palet, dan kartu asli Manifestalk diterima.</p></div>
+      <div class="note"><b>Isi Mindful Manifestation Card</b><p>Brief menyebut "pakai salah satu kartu yang ada di web Manifestalk". Perlu daftar kartu resmi (judul, gambar, pesan) dan apakah kartu diacak dari semua kartu atau per kategori pertanyaan.</p></div>
+      <div class="note"><b>Cara kartu dikirim</b><p>Opsi: email otomatis, link WhatsApp, atau unduh gambar. Rekomendasi: tampilkan di layar dan kirim ke email, karena paling mudah dan tidak butuh integrasi WhatsApp Business.</p></div>
+      <div class="note"><b>Mode di booth</b><p>Peserta pakai HP sendiri lewat QR (lebih privat untuk insight pribadi), atau tablet kiosk yang dipandu host. Kiosk perlu tombol "Selesai" yang mereset sesi.</p></div>
+      <div class="note"><b>Persetujuan data</b><p>Karena mengumpulkan HP dan email, perlu teks persetujuan singkat dan kebijakan penggunaan data, misalnya untuk info event Manifestalk berikutnya.</p></div>
+      <div class="note"><b>Nama event &amp; tanggal</b><p>Kartu Self Connection mencantumkan nama event dan tanggal. Mohon info nama event yang dipakai.</p></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+const I = {
+  moon:'<path d="M30 9a15 15 0 1 0 9 25A13 13 0 0 1 30 9z"/>',
+  sun:'<circle cx="24" cy="27" r="8"/><path d="M24 9v5M9 27H4M44 27h-5M12 15l3 3M36 15l-3 3M5 40h38"/>',
+  wave:'<path d="M4 26c5-6 10-6 15 0s10 6 15 0 10-6 10-6M4 35c5-6 10-6 15 0s10 6 15 0 10-6 10-6"/>',
+  mountain:'<path d="M4 38 18 15l8 12 5-7 13 18z"/>',
+  seed:'<path d="M24 41V24M24 24c-8 0-12-6-12-12 8 0 12 6 12 12zM24 29c6 0 10-4 10-10-6 0-10 4-10 10z"/>',
+  lotus:'<path d="M24 38c-6-6-6-16 0-24 6 8 6 18 0 24zM24 38c-8-2-14-8-16-16 8 0 14 6 16 16zM24 38c8-2 14-8 16-16-8 0-14 6-16 16zM10 41h28"/>',
+  root:'<path d="M24 6v16M24 22c-4 6-10 8-14 16M24 22c4 6 10 8 14 16M24 22v18M17 31l-5 3M31 31l5 3"/>',
+  feather:'<path d="M36 8C22 10 14 22 14 36l-4 6M14 36c10-2 20-10 22-28M18 28h9M21 21h8"/>',
+  door:'<path d="M14 42V18a10 10 0 0 1 20 0v24zM8 42h32M29 30h.01"/>',
+  mind:'<circle cx="24" cy="24" r="16"/><path d="M24 24a2.5 2.5 0 1 1 3 2.4M27 26.4A6 6 0 1 1 30 21M30 21a9.5 9.5 0 1 1-12.5-5"/>',
+  body:'<circle cx="24" cy="10" r="4"/><path d="M24 15v14M13 20l11 4 11-4M24 29l-6 12M24 29l6 12"/>',
+  feeling:'<path d="M24 40S8 30 8 19a8 8 0 0 1 16-3 8 8 0 0 1 16 3c0 11-16 21-16 21z"/>',
+  check:'<path d="M12 25l8 8 16-17"/>'
+};
+const svg = (k,sw=2) => `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
+document.getElementById('h-mind').innerHTML=svg('mind',2.4);
+document.getElementById('h-body').innerHTML=svg('body',2.4);
+document.getElementById('h-feel').innerHTML=svg('feeling',2.4);
+
+const BACK = `<svg viewBox="0 0 182 100" aria-hidden="true">${Array.from({length:12},(_,i)=>`<path d="M91 50 L${91+130*Math.cos(i*Math.PI/6)} ${50+130*Math.sin(i*Math.PI/6)} L${91+130*Math.cos(i*Math.PI/6+.13)} ${50+130*Math.sin(i*Math.PI/6+.13)}z" fill="rgba(228,242,94,.13)"/>`).join('')}<circle cx="91" cy="50" r="30" fill="none" stroke="rgba(228,242,94,.5)" stroke-dasharray="2 4"/><circle cx="20" cy="18" r="3" fill="#E4F25E"/><circle cx="160" cy="80" r="4" fill="#FF7A3D"/><circle cx="165" cy="20" r="2.5" fill="#F0567E"/></svg><small>pilih aku</small>`;
+
+const QS = {
+  mind:{k:'mind',c:'var(--mind)',label:'Mind',id:'Pikiran',q:'Pola pikir apa yang perlu saya ubah agar bisa melangkah maju?'},
+  body:{k:'body',c:'var(--body)',label:'Body',id:'Tubuh',q:'Langkah nyata apa yang perlu saya lakukan untuk lebih menjaga dan menghargai tubuh saya?'},
+  feeling:{k:'feeling',c:'var(--feel)',label:'Feeling',id:'Perasaan',q:'Perasaan apa yang perlu lebih berani saya ungkapkan atau lepaskan agar bisa melangkah lebih ringan?'}
+};
+const CARDS = [
+  {k:'feather',n:'Bulu',m:'Lepaskan yang berat. Rasakan betapa ringannya dirimu.',c1:'#B9A8FF',c2:'#FF9C7A'},
+  {k:'lotus',n:'Teratai',m:'Keindahan bisa tumbuh dari tempat yang paling keruh.',c1:'#E4F25E',c2:'#F0567E'},
+  {k:'moon',n:'Bulan',m:'Tidak apa-apa untuk tidak selalu penuh.',c1:'#B9A8FF',c2:'#2C3FE0'},
+  {k:'root',n:'Akar',m:'Kembali ke dasar. Apa yang diam-diam menopangmu?',c1:'#FFC56B',c2:'#E9476F'},
+  {k:'wave',n:'Ombak',m:'Biarkan datang, biarkan pergi. Kamu tetap lautnya.',c1:'#7FE0B4',c2:'#3E5BF2'},
+  {k:'sun',n:'Fajar',m:'Setiap pagi adalah izin untuk memulai lagi.',c1:'#E4F25E',c2:'#FF7A3D'},
+  {k:'mountain',n:'Gunung',m:'Tenang dan teguh, bahkan saat cuaca berubah.',c1:'#7FE0B4',c2:'#2C3FE0'},
+  {k:'seed',n:'Benih',m:'Hal besar dimulai dari satu langkah kecil hari ini.',c1:'#E4F25E',c2:'#2FB67C'},
+  {k:'door',n:'Pintu',m:'Apa yang siap kamu buka, dan apa yang siap kamu tutup?',c1:'#FF9C7A',c2:'#8A6BFF'}
+];
+const art = c => `<div class="art" style="--c1:${c.c1};--c2:${c.c2}">${svg(c.k,2.4)}</div>`;
+const SAMPLE = {
+  q:'feeling', deck:[0,1,2], picked:0,
+  insight:'Aku perlu berani bilang "aku capek" tanpa merasa bersalah, dan melepas keinginan untuk selalu terlihat kuat.',
+  name:'Rina Maharani', hp:'0812 3456 7890', email:'rina@contoh.id', consent:true
+};
+const STARTERS=['Aku sadar…','Mulai hari ini aku…','Aku siap melepas…'];
+const EVENT = 'Manifestalk · Nama Event';
+const DATE = '24 Nov 2026';
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const first = s => esc((s.name||'Kamu').trim().split(' ')[0]||'Kamu');
+
+const STEPS = [
+  {t:'Sambutan',d:'Intro + ajakan tarik napas',src:'new'},
+  {t:'Pilih pertanyaan',d:'Mind, Body, atau Feeling',src:'brief'},
+  {t:'Pilih kartu',d:'3 kartu tertutup, pilih dengan intuisi',src:'brief'},
+  {t:'Tulis insight',d:'Kartu terbuka jadi panduan',src:'brief'},
+  {t:'Data diri',d:'Nama, HP, email + pratinjau',src:'brief'},
+  {t:'Kartu Self Connection',d:'Hasil akhir yang personal',src:'brief'},
+  {t:'Terkirim',d:'Konfirmasi + kembali ke awal',src:'new'}
+];
+const NOTES = [
+  {p:'Mengubah suasana ramai event jadi momen untuk diri sendiri. Bentuk warna-warni di tengah bergerak pelan, memandu satu tarikan napas sebelum mulai.',ux:['Tanpa login atau install','Satu tombol utama: Yuk, mulai','Label "3 menit" agar peserta tidak ragu']},
+  {p:'Peserta memilih fokus refleksi. Setiap kategori punya warna sendiri yang terbawa sampai kartu hasil.',ux:['Satu pilihan saja, tombol Lanjut aktif setelah memilih','Pertanyaan ditulis lengkap sesuai brief','Warna kategori mewarnai layar berikutnya']},
+  {p:'Momen kejutan. Tiga kartu diacak dari koleksi Manifestalk setiap sesi, ditata sedikit miring seperti kartu di atas meja.',ux:['Pertanyaan yang dipilih tetap terlihat','Kartu dibalik dengan animasi flip','Kartu lain meredup setelah satu dipilih','Stiker "pilih aku" menambah sentuhan playful']},
+  {p:'Kartu yang terbuka menjadi panduan untuk menjawab. Chip pembuka kalimat membantu peserta yang bingung mulai menulis.',ux:['Pertanyaan + pesan kartu dekat kolom ketik','Chip pembuka kalimat bisa diketuk','Batas 200 karakter agar muat di kartu hasil']},
+  {p:'Titik friction terbesar. Diredam dengan pratinjau kartu yang diburamkan, jadi peserta tahu hadiah yang menunggu.',ux:['Hanya 3 field: Nama, HP, Email','Keyboard sesuai tipe (angka untuk HP)','Persetujuan data yang jelas']},
+  {p:'Kartu Self Connection bergaya poster: warna kategori, pertanyaan, kartu yang dipilih, insight yang di-highlight, nama, tanggal, dan event.',ux:['Proporsi pas untuk screenshot dan Instagram Story','Kirim ke email atau WhatsApp','Unduh sebagai gambar (versi penuh)']},
+  {p:'Penutup yang hangat dan reset sesi. Penting jika memakai tablet kiosk di booth.',ux:['Ringkasan tujuan pengiriman','Ajakan follow Manifestalk','Kembali ke awal otomatis setelah 30 detik (kiosk)']}
+];
+
+const prog = i => `<div class="prog">${[1,2,3,4,5].map(n=>`<i class="${n<=i?'on':''}"></i>`).join('')}</div>`;
+const top = i => `<div class="top"><span class="brand">manifestalk</span>${i?prog(i):''}</div>`;
+function result(s){
+  const q=QS[s.q], c=CARDS[s.deck[s.picked]];
+  return `<div class="sc" style="--cat:${q.c}">
+    <div class="hd"><div class="meta"><span>${q.label} · ${q.id}</span><span>${DATE}</span></div><h5>Self<em>Connection</em></h5></div>
+    <div class="bd">
+      <p class="q">${q.q}</p>
+      <div class="crd">${art(c)}<div><b>${c.n}</b><p>${c.m}</p></div></div>
+      <div class="ins"><span>${esc(s.insight)||'Insight kamu akan muncul di sini'}</span></div>
+      <div class="ft"><span>untuk <b>${first(s)}</b></span><span>${EVENT}</span></div>
+    </div>
+  </div>`;
+}
+
+function render(i,s,live){
+  const qc = s.q ? QS[s.q].c : 'var(--mind)';
+  const bg = `<span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>`;
+  const bar = `<div class="bar"><span>9:41</span><span>●●●</span></div>`;
+  let b='';
+  if(i===0){
+    b=`${top(0)}
+      <div class="orb"><div class="g"></div><span>tarik napas</span></div>
+      <p class="ttl c">Hai, apa kabar <em>dirimu</em> hari ini?</p>
+      <p class="sub c">Luangkan 3 menit untuk terhubung dengan diri sendiri. Ikuti intuisimu.</p>
+      <div class="tags"><span>3 menit</span><span>no right, no wrong</span><span>tanpa install</span></div>
+      <div class="spacer"></div>
+      <button class="btn" data-a="go" data-to="1">Yuk, mulai <span class="ar">→</span></button>`;
+  } else if(i===1){
+    b=`${top(1)}
+      <p class="qhead">Apa yang paling saya butuhkan saat ini untuk membuat saya menjadi lebih baik?</p>
+      ${Object.values(QS).map(q=>`<button class="qopt ${s.q===q.k?'sel':''}" style="--qc:${q.c}" data-a="q" data-v="${q.k}" aria-pressed="${s.q===q.k}"><span class="qicon">${svg(q.k,2.4)}</span><span><b>${q.label}<small>${q.id}</small></b><em>${q.q}</em></span><span class="tick">${svg('check',3.5)}</span></button>`).join('')}
+      <div class="spacer"></div>
+      <button class="btn" data-a="go" data-to="2" ${s.q?'':'disabled'}>Lanjut <span class="ar">→</span></button>`;
+  } else if(i===2){
+    const q=QS[s.q||'feeling'];
+    b=`${top(2)}
+      <span class="chip">${q.label} · ${q.id}</span>
+      <p class="qline">${q.q}</p>
+      <p class="sub">Tarik napas, lalu pilih satu kartu yang paling memanggilmu.</p>
+      <div class="deck">${s.deck.map((c,j)=>`<button class="mcard ${s.picked===j?'flip':''} ${s.picked!=null&&s.picked!==j?'dim':''}" data-a="pick" data-v="${j}" aria-label="Kartu ${j+1}"><span class="in"><span class="face back">${BACK}</span><span class="face front">${art(CARDS[c])}<div><b>${CARDS[c].n}</b><p>${CARDS[c].m}</p></div></span></span></button>`).join('')}</div>`;
+  } else if(i===3){
+    const q=QS[s.q], c=CARDS[s.deck[s.picked]];
+    b=`${top(3)}
+      <div class="reveal">${art(c)}<div><small>Kartumu</small><b>${c.n}</b><p>${c.m}</p></div></div>
+      <p class="qline">${q.q}</p>
+      <div class="field"><label for="ins">Tulis insight-mu</label>
+        <textarea id="ins" maxlength="200" placeholder="Apa yang muncul saat melihat kartu ini?" data-f="insight">${esc(s.insight)}</textarea>
+        <span class="count"><span id="cnt">${(s.insight||'').length}</span>/200</span></div>
+      <div class="starters">${STARTERS.map(t=>`<button class="starter" data-a="start" data-v="${t}">${t}</button>`).join('')}</div>
+      ${live?'<button class="link" data-a="fill" data-v="insight">Pakai contoh insight</button>':''}
+      <div class="spacer"></div>
+      <button class="btn cat" data-a="go" data-to="4" id="sub" ${(s.insight||'').trim().length>2?'':'disabled'}>Submit <span class="ar">→</span></button>`;
+  } else if(i===4){
+    b=`${top(4)}
+      <p class="ttl">Satu langkah <em>lagi</em></p>
+      <p class="sub">Isi data dirimu untuk mendapatkan kartu Self Connection dan insight yang kamu temukan.</p>
+      <div class="preview"><div class="mini">${result(s)}</div><span class="lock">Kartumu sudah siap ✦</span></div>
+      <div class="field"><label for="nm">Nama</label><input id="nm" data-f="name" value="${esc(s.name)}" placeholder="Nama panggilan" autocomplete="name"></div>
+      <div class="field"><label for="hp">No. HP</label><input id="hp" data-f="hp" value="${esc(s.hp)}" placeholder="08xx xxxx xxxx" inputmode="tel" autocomplete="tel"></div>
+      <div class="field"><label for="em">Email</label><input id="em" data-f="email" value="${esc(s.email)}" placeholder="nama@email.com" inputmode="email" autocomplete="email"></div>
+      <label class="check"><input type="checkbox" id="cs" data-f="consent" ${s.consent?'checked':''}><span>Saya setuju data saya dipakai untuk mengirim kartu ini dan info kegiatan Manifestalk.</span></label>
+      ${live?'<button class="link" data-a="fill" data-v="form">Pakai data contoh</button>':''}
+      <button class="btn" data-a="go" data-to="5" id="sub" ${formOk(s)?'':'disabled'}>Dapatkan kartuku <span class="ar">→</span></button>`;
+  } else if(i===5){
+    b=`${top(5)}
+      <p class="ttl">Ini kartumu, <em>${first(s)}</em></p>
+      ${result(s)}
+      <div class="row"><button class="btn" data-a="go" data-to="6">Kirim ke email</button><button class="btn ghost" data-a="go" data-to="6">WhatsApp</button></div>
+      <button class="link" data-a="noop">Unduh sebagai gambar</button>`;
+  } else {
+    b=`${top(0)}
+      <div class="burst"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 2l9 16 17-8 1 19 19 3-10 16 13 13-18 6 3 19-18-4-8 17-8-17-18 4 3-19-18-6 13-13L4 32l19-3 1-19 17 8z" fill="#E4F25E"/><path d="M34 51l11 11 21-23" fill="none" stroke="#14201C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="dots"><i style="background:var(--mind);left:-1em;top:1em"></i><i style="background:var(--feel);right:-1.2em;top:3em"></i><i style="background:var(--body);left:1em;bottom:-.6em"></i></span></div>
+      <p class="ttl c">Kartumu sudah <em>terbang</em> ke inbox!</p>
+      <p class="sub c">Simpan, baca lagi saat kamu butuh pengingat kecil untuk dirimu sendiri.</p>
+      <div class="sent"><div><span>Email</span><b>${esc(s.email)}</b></div><div><span>WhatsApp</span><b>${esc(s.hp)}</b></div></div>
+      <p class="sub c" style="font-size:.78em">Sampai jumpa di sesi Manifestalk berikutnya.</p>
+      <div class="spacer"></div>
+      <button class="btn ghost" data-a="reset">Kembali ke awal</button>`;
+  }
+  return {html: bg+bar+`<div class="body ${live?'fade':''}">${b}</div>`, cat: qc};
+}
+function formOk(s){ return !!((s.name||'').trim() && (s.hp||'').replace(/\D/g,'').length>=9 && /\S+@\S+\.\S+/.test(s.email||'') && s.consent); }
+
+/* journey */
+const J = [
+  {t:'Menemukan',src:'new',do:'Melihat booth dan poster QR di area event',tp:'Poster QR, host booth',feel:'Penasaran',fx:'Ajakan singkat di poster: "3 menit untuk dirimu"',e:2},
+  {t:'Sambutan',src:'new',do:'Scan QR, membaca intro, tarik napas bersama animasi',tp:'Layar 1 · Sambutan',feel:'Mulai rileks',fx:'Visual warna-warni yang langsung menarik',e:3},
+  {t:'Pilih pertanyaan',src:'brief',do:'Memilih Mind, Body, atau Feeling',tp:'Layar 2 · Pertanyaan',feel:'Reflektif',fx:'Warna per kategori, pertanyaan lengkap',e:3.1},
+  {t:'Pilih kartu',src:'brief',do:'Memilih 1 dari 3 kartu tertutup dengan intuisi',tp:'Layar 3 · Kartu',feel:'Antisipasi, terkejut',fx:'Animasi flip sebagai momen "wow"',e:4.2},
+  {t:'Tulis insight',src:'brief',do:'Merenung, mengetik insight, klik Submit',tp:'Layar 4 · Insight',feel:'Terhubung, kadang ragu',fx:'Chip pembuka kalimat agar tidak blank',e:3.4},
+  {t:'Data diri',src:'brief',do:'Mengisi nama, HP, email',tp:'Layar 5 · Data diri',feel:'Sedikit enggan',fx:'Pratinjau kartu buram + hanya 3 field',e:2.4,risk:true},
+  {t:'Terima kartu',src:'brief',do:'Melihat kartu Self Connection, kirim ke email/WA',tp:'Layar 6 · Kartu',feel:'Puas, ingin berbagi',fx:'Kartu bergaya poster, siap di-share',e:4.6},
+  {t:'Setelah event',src:'new',do:'Menerima email berisi kartu, membaca ulang',tp:'Email, WhatsApp',feel:'Teringat, terhubung ke brand',fx:'Email ringkas + ajakan sesi berikutnya',e:4}
+];
+function curve(){
+  const W=1000,H=120,pad=40,step=(W-pad*2)/(J.length-1);
+  const y=e=>H-14-(e/5)*(H-28);
+  const pts=J.map((j,i)=>[pad+i*step,y(j.e)]);
+  let d=`M${pts[0][0]},${pts[0][1]}`;
+  for(let i=1;i<pts.length;i++){const [x0,y0]=pts[i-1],[x1,y1]=pts[i],cx=(x0+x1)/2;d+=` C${cx},${y0} ${cx},${y1} ${x1},${y1}`;}
+  const area=d+` L${pts.at(-1)[0]},${H} L${pts[0][0]},${H} Z`;
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Kurva emosi peserta: naik saat memilih kartu, turun saat mengisi data diri, puncak saat menerima kartu">
+    <path d="${area}" fill="var(--accent)" opacity=".12"/>
+    <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2.5" vector-effect="non-scaling-stroke"/>
+    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="${J[i].risk?'var(--coral)':'var(--accent)'}" stroke="var(--surface)" stroke-width="2" vector-effect="non-scaling-stroke"/>`).join('')}
+  </svg>`;
+}
+document.getElementById('journey').innerHTML =
+  `<thead><tr><th></th>${J.map(j=>`<th><small class="${j.src==='new'?'new':''}">${j.src==='new'?'Usulan':'Brief'}</small><br>${j.t}</th>`).join('')}</tr></thead>
+  <tbody>
+    <tr><th>Dilakukan</th>${J.map(j=>`<td>${j.do}</td>`).join('')}</tr>
+    <tr><th>Touchpoint</th>${J.map(j=>`<td>${j.tp}</td>`).join('')}</tr>
+    <tr><th>Dirasakan</th>${J.map(j=>`<td class="feel" style="color:${j.risk?'var(--coral)':'inherit'}">${j.feel}</td>`).join('')}</tr>
+    <tr><th>Emosi</th><td class="curve" colspan="${J.length}">${curve()}</td></tr>
+    <tr><th>Peluang desain</th>${J.map(j=>`<td>${j.fx}</td>`).join('')}</tr>
+  </tbody>`;
+
+/* storyboard */
+const sb = [[0,SAMPLE],[1,SAMPLE],[2,{...SAMPLE,picked:null}],[3,SAMPLE],[4,SAMPLE],[5,SAMPLE],[6,SAMPLE]];
+document.getElementById('board').innerHTML = sb.map(([i,s])=>{const r=render(i,s,false); return `<figure class="frame">
+  <div class="phone" aria-hidden="true"><div class="screen" style="--cat:${r.cat}">${r.html}</div></div>
+  <figcaption><span class="src ${STEPS[i].src==='new'?'new':''}">${String(i+1).padStart(2,'0')} · ${STEPS[i].src==='new'?'Usulan tambahan':'Sesuai brief'}</span><b>${STEPS[i].t}</b><span>${NOTES[i].p}</span></figcaption>
+</figure>`}).join('');
+
+/* live prototype */
+const live=document.getElementById('live'), stepsEl=document.getElementById('steps'), notesEl=document.getElementById('notes');
+const shuffle=()=>{const a=[...CARDS.keys()];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.slice(0,3);};
+let cur=0, st=fresh();
+function fresh(){ return {q:null,deck:shuffle(),picked:null,insight:'',name:'',hp:'',email:'',consent:false}; }
+function ensure(i){
+  if(i>=2&&!st.q) st.q=SAMPLE.q;
+  if(i>=3&&st.picked==null) st.picked=0;
+  if(i>=4&&!st.insight.trim()) st.insight=SAMPLE.insight;
+  if(i>=5&&!formOk(st)) Object.assign(st,{name:st.name||SAMPLE.name,hp:SAMPLE.hp,email:SAMPLE.email,consent:true});
+}
+function show(i){
+  ensure(i); cur=i;
+  const r=render(i,st,true); live.style.setProperty('--cat',r.cat); live.innerHTML=r.html;
+  stepsEl.innerHTML=STEPS.map((s,j)=>`<li><button data-j="${j}" ${j===cur?'aria-current="step"':''}><span class="n">${j+1}</span><span><b>${s.t}</b><span>${s.d}${s.src==='new'?' · usulan':''}</span></span></button></li>`).join('');
+  const n=NOTES[i];
+  notesEl.innerHTML=`<div class="note"><h4>${STEPS[i].t}</h4><p>${n.p}</p></div><div class="note"><h4>Detail UX</h4><ul>${n.ux.map(u=>`<li>${u}</li>`).join('')}</ul></div>`;
+}
+stepsEl.addEventListener('click',e=>{const b=e.target.closest('button[data-j]'); if(b) show(+b.dataset.j);});
+live.addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]'); if(!b||b.disabled) return;
+  const a=b.dataset.a;
+  if(a==='go') show(+b.dataset.to);
+  else if(a==='q'){ st.q=b.dataset.v; st.picked=null; st.deck=shuffle(); show(1); }
+  else if(a==='pick'){ if(st.picked!=null) return; st.picked=+b.dataset.v;
+    live.querySelectorAll('.mcard').forEach((m,j)=>m.classList.add(j===st.picked?'flip':'dim'));
+    setTimeout(()=>{ if(cur===2) show(3); }, 1600); }
+  else if(a==='start'){ const t=live.querySelector('#ins'); st.insight=(st.insight.trim()?st.insight.trim()+' ':'')+b.dataset.v.replace('…',' '); show(3); const n=live.querySelector('#ins'); n.focus(); n.setSelectionRange(n.value.length,n.value.length); }
+  else if(a==='fill'){ if(b.dataset.v==='insight') st.insight=SAMPLE.insight; else Object.assign(st,{name:SAMPLE.name,hp:SAMPLE.hp,email:SAMPLE.email,consent:true}); show(cur); }
+  else if(a==='reset'){ st=fresh(); show(0); }
+});
+live.addEventListener('input',e=>{
+  const f=e.target.dataset.f; if(!f) return;
+  st[f]= e.target.type==='checkbox'? e.target.checked : e.target.value;
+  const sub=live.querySelector('#sub');
+  if(cur===3){ live.querySelector('#cnt').textContent=st.insight.length; sub.disabled=st.insight.trim().length<3; }
+  if(cur===4){ sub.disabled=!formOk(st); const m=live.querySelector('.mini'); if(m) m.innerHTML=result(st); }
+});
+show(0);
+})();
+</script>
