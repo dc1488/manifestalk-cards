@@ -10,10 +10,34 @@ Peserta memilih satu pertanyaan refleksi (Mind, Body, atau Feeling), membuka sat
 
 | Folder | Isi |
 | --- | --- |
+| `app/` | **Web app Self Connection untuk booth event.** Situs statis tanpa build: buka `app/index.html` atau deploy folder ini ke hosting statis mana pun. |
 | `prototype/index.html` | Halaman konsep: UX journey, prototype HP yang bisa diklik, storyboard 7 layar, dan daftar hal yang perlu dikonfirmasi. Buka langsung di browser. |
 | `deck/` | Sumber slide presentasi (12 slide): `deck.json` (urutan slide), `deck.css` (gaya), `slides/*.html` (isi tiap slide, termasuk speaker notes). |
 | `deck/screens/` | Screenshot ketujuh layar prototype yang dipakai di slide. |
 | `docs/brief-self-connection.pdf` | Brief awal konsep Self Connection. |
+
+## Web app (`app/`)
+
+Alurnya: sambutan → pilih pertanyaan → pilih 1 dari 3 kartu acak → tulis insight → isi data diri → kartu Self Connection → terkirim.
+
+| URL | Kegunaan |
+| --- | --- |
+| `app/index.html` | Mode biasa, untuk peserta yang scan QR dari HP sendiri. |
+| `app/index.html?kiosk` | Mode tablet di booth: kembali ke awal setelah 90 detik tanpa aktivitas, dan 30 detik setelah selesai. |
+| `app/index.html?admin` | Daftar peserta, unduh CSV, dan hapus data. |
+
+Yang sudah berfungsi:
+
+- **Simpan gambar:** membuat PNG 1080×1920 (ukuran Instagram Story). Di HP membuka menu bagikan, di laptop langsung mengunduh.
+- **WhatsApp:** membuka chat WhatsApp ke nomor peserta dengan teks kartu dan insight.
+- **Data peserta:** tersimpan di browser perangkat itu saja (localStorage), bisa diekspor CSV dari halaman admin.
+
+Yang belum (perlu backend):
+
+- **Kirim ke email** belum benar-benar mengirim. Saat ini data dicatat di halaman admin, lalu peserta melihat layar terima kasih.
+- Data tidak terkumpul lintas perangkat. Kalau peserta memakai HP masing-masing, datanya hanya ada di HP mereka.
+
+Konten (nama event, pertanyaan, 9 kartu, chip pembuka kalimat, durasi kiosk) diatur di `app/data.js`.
 
 ## Menjalankan prototype
 
