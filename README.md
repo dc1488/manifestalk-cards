@@ -11,6 +11,7 @@ Peserta memilih satu pertanyaan refleksi (Mind, Body, atau Feeling), membuka sat
 | Folder | Isi |
 | --- | --- |
 | `app/` | **Web app Self Connection untuk booth event.** Situs statis tanpa build: buka `app/index.html` atau deploy folder ini ke hosting statis mana pun. |
+| `app-v2/` | **Versi 2** hasil revisi: warna kraft dan cokelat Manifestalk, Feeling menjadi Emotion, teks pertanyaan memakai font yang sama dengan label, kartu tertutup memakai sampul Mindful Manifestation Cards, dan kartu terbuka berupa foto tanpa teks. Kartu ada di `app-v2/img/` dan diatur di `app-v2/data.js`. Versi 1 di `app/` tetap ada. |
 | `prototype/index.html` | Halaman konsep: UX journey, prototype HP yang bisa diklik, storyboard 7 layar, dan daftar hal yang perlu dikonfirmasi. Buka langsung di browser. |
 | `deck/` | Sumber slide presentasi (12 slide): `deck.json` (urutan slide), `deck.css` (gaya), `slides/*.html` (isi tiap slide, termasuk speaker notes). |
 | `deck/screens/` | Screenshot ketujuh layar prototype yang dipakai di slide. |
